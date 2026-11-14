@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>مقياس التوازن الإبداعي - الأخصائية صفاء المصري</title>
+    <script src="https://cloudflare.com"></script>
+    <style>
+        :root { --pearl: #ffffff; --accent: #7d8cc4; --gold: #c5a059; --vital-green: #27ae60; }
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; background: #080a0f; color: #2c3e50; }
+        #canvas-container { position: fixed; top: 0; left: 0; z-index: -1; }
+        
+        #main-wrapper {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 92%; max-width: 850px; max-height: 88vh;
+            background: rgba(255,255,255,0.96); backdrop-filter: blur(25px);
+            border-radius: 50px; padding: 45px; box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+            overflow-y: auto; z-index: 10; border: 1px solid rgba(255,255,255,0.6);
+        }
+
+        @keyframes pulse-btn { 0% { transform: scale(1); } 50% { transform: scale(1.03); box-shadow: 0 0 20px rgba(125,140,196,0.4); } 100% { transform: scale(1); } }
+        @keyframes float-ui { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .header { text-align: center; margin-bottom: 25px; animation: float-ui 4s ease-in-out infinite; }
+        .logo { 
+            width: 110px; height: 110px; border-radius: 50%; object-fit: contain; 
+            background: #ffffff; padding: 6px; border: 4px solid white; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12); 
+        }
+        
+        .intro-section { 
+            background: linear-gradient(135deg, #f0f4ff 0%, #ffffff 100%);
+            padding: 30px; border-radius: 30px; border-right: 8px solid var(--accent);
+            line-height: 1.9; margin-bottom: 30px; font-size: 1.15rem; text-align: justify;
+        }
+
+        .rights-box {
+            background: #f8f9fc; border: 1px solid #e1e6f5; border-right: 6px solid var(--accent);
+            padding: 18px 22px; border-radius: 20px; font-size: 0.92rem; line-height: 1.7;
+            color: #4a5568; margin-bottom: 25px; text-align: right;
+        }
+
+        .input-field { width: 100%; padding: 18px; border-radius: 20px; border: 1.5px solid #eee; font-size: 1.05rem; transition: 0.4s; background: #fafafa; margin-bottom: 15px; box-sizing: border-box; }
+        .input-field:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 15px rgba(125,140,196,0.1); outline: none; }
+
+        .opt-btn { 
+            background: #fff; border: 1px solid #f0f0f0; padding: 20px; border-radius: 25px; 
+            cursor: pointer; transition: 0.3s; font-weight: 700; width: 100%; margin-bottom: 15px; 
+            font-size: 1.15rem; color: #444; position: relative; overflow: hidden;
+            animation: pulse-btn 3s infinite;
+        }
+        .opt-btn:hover { background: var(--accent); color: white; transform: scale(1.05); animation: none; }
+
+        #result-area { display: none; }
+        .print-header-info { display: none; }
+
+        @media print {
+            @page { size: A4; margin: 15mm; }
+            body { background: white !important; overflow: visible !important; height: auto !important; }
+            #canvas-container, .opt-btn, .print-trigger, #setup-section, #music-player, #quiz-body { display: none !important; }
+            #main-wrapper { 
+                position: relative !important; top: 0 !important; left: 0 !important; 
+                transform: none !important; width: 100% !important; max-width: none !important;
+                max-height: none !important; padding: 0 !important; box-shadow: none !important; 
+                background: white !important; overflow: visible !important;
+            }
+            
+            .print-header-info { 
+                display: block !important; border-bottom: 3px solid var(--accent); 
+                margin-bottom: 25px; padding-bottom: 15px; 
+            }
+            .qa-table { 
+                display: table !important; width: 100%; border-collapse: collapse; 
+                margin-top: 20px; page-break-inside: auto;
+            }
+            .qa-table th, .qa-table td { 
+                border: 1px solid #ccc; padding: 8px; text-align: right; 
+                font-size: 11pt; line-height: 1.4; color: black;
+            }
+            .qa-table th { background: #f8f8f8 !important; }
+            tr { page-break-inside: avoid; }
+            #deep-analysis, #final-recommendation, .rights-box { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="music-player" style="position: absolute; left: -9999px;">
+    <iframe id="yt-audio" width="1" height="1" src="https://youtube.com" frameborder="0" allow="autoplay"></iframe>
+</div>
+
+<div id="canvas-container"></div>
+
+<div id="main-wrapper">
+    <div id="setup-section">
+        <div class="header">
+            <img src="https://ibb.co" class="logo" alt="شعار الإبداع والموهبة">
+            <h1 style="color:var(--accent); font-size: 2rem; margin:10px 0;">نَبض الاتزان للمبدعين</h1>
+            <p style="color:var(--gold); font-weight:700; letter-spacing: 1px;">إعداد وأتمتة: الأخصائية صفاء المصري</p>
+        </div>
+        
+        <div class="intro-section">
+            <strong>مبدعنا المتميز..</strong><br>
+            إن ذكاءك العاطفي هو المحرك السري لعبقريتك. هذا المقياس ليس مجرد أسئلة، بل هو <strong>رحلة استكشاف</strong> لنبضك النفسي. أجب بصدق، ودع نغمات "السكينة" تُرشدك، لنحافظ معاً على توهجك الإبداعي بعيداً عن ضغوط الاحتراق.
+        </div>
+
+        <input type="text" id="user-name" class="input-field" placeholder="الاسم الرباعي للمبدع/ـة...">
+        <input type="text" id="user-grade" class="input-field" placeholder="الصف / الفئة...">
+        <button class="opt-btn" style="background:var(--accent); color:white; border:none;" onclick="startQuiz()">ابدأ الرحلة الآن</button>
+    </div>
+
+    <div id="quiz-body"></div>
+
+    <div id="result-area">
+        <div class="print-header-info">
+            <table style="width:100%; border:none;">
+                <tr>
+                    <td style="width:35%; text-align:right; font-size:10pt; line-height:1.6;"><strong>وحدة القياس والتشخيص النفسي</strong><br>التربية الخاصة - الموهبة والإبداع<br>إشراف: الأخصائية صفاء المصري</td>
+                    <td style="width:30%; text-align:center;"><img src="https://ibb.co" width="75" style="margin-bottom:5px;"><br><strong>سجل تشخيص التوازن الإبداعي</strong></td>
+                    <td style="width:35%; text-align:left; font-size:10pt; line-height:1.6;"><strong>اسم المبدع:</strong> <span id="res-name-print"></span><br><strong>الصف / الفئة:</strong> <span id="res-grade-print"></span><br><strong>التاريخ:</strong> <span id="res-date-print"></span></td>
+                </tr>
+            </table>
+        </div>
+
+        <h2 id="score-status" style="text-align:center; color:var(--accent); margin-bottom:20px;"></h2>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px; margin:25px 0;">
+            <div style="text-align:center; padding:15px; background:#fff; border-radius:20px; border:1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.02);">الإنهاك العاطفي<br><strong id="e-score" style="color:#e74c3c; font-size:1.6rem;"></strong>/27</div>
+            <div style="text-align:center; padding:15px; background:#fff; border-radius:20px; border:1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.02);">التشكك الدراسي<br><strong id="d-score" style="color:#f39c12; font-size:1.6rem;"></strong>/15</div>
+            <div style="text-align:center; padding:15px; background:#fff; border-radius:20px; border:1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.02);">الكفاءة الشخصية<br><strong id="a-score" style="color:#27ae60; font-size:1.6rem;"></strong>/24</div>
+        </div>
+
+        <div id="deep-analysis" class="intro-section" style="background:white; border-color:var(--gold); font-size:1rem;"></div>
+        <div id="final-recommendation" style="padding:20px; background:#f4fcf6; border-right:10px solid var(--vital-green); border-radius:25px; line-height:1.8; margin-bottom: 25px;"></div>
+
+        <div class="rights-box">
+            <strong>📌 التوثيق العلمي وحفظ الحقوق الفكرية:</strong><br>
+            • <strong>المرجعية العلمية للمقياس:</strong> يستند البناء النظري وأبعاد القياس الثلاثة (الإنهاك العاطفي، التشكك/تبلد المشاعر، الكفاءة الشخصية) إلى الإطار العلمي لـ <strong>مقياس ماسلاش للاحتراق النفسي (MBI)</strong> للعالمة <strong>كريستينا ماسلاش (Christina Maslach)</strong>.<br>
+            • <strong>التكييف والأتمتة الرقمية:</strong> تم تكييف الفقرات لتناسب بيئة الموهبة والإبداع وبرمجتها إلكترونياً بواسطة <strong>الأخصائية صفاء المصري</strong> (جميع حقوق التصميم والأتمتة محفوظة).<br>
+            • <em>تنويه مهني: هذا التقرير أداة مسح إرشادية ولا يُغني عن التقييم الإكلينيكي المتخصص.</em>
+        </div>
+
+        <h3 class="print-header-info" style="border-bottom: 1px solid #eee; padding-bottom: 10px;">السجل التفصيلي للاستجابات:</h3>
+        <table class="qa-table" id="qa-full-table">
+            <thead>
+                <tr><th style="width:50px;">#</th><th>الفقرة التشخيصية</th><th>استجابة المبدع</th></tr>
+            </thead>
+            <tbody id="qa-log-body"></tbody>
+        </table>
+
+        <div class="print-header-info" style="margin-top:40px; text-align:right;">
+            <p><strong>أخصائية الموهبة والإبداع:</strong> صفاء المصري</p>
+            <p>التوقيع: .......................................</p>
+        </div>
+        
+        <button class="print-trigger" style="background:var(--vital-green); color:white; padding:20px; border:none; border-radius:40px; width:100%; cursor:pointer; font-weight:bold; font-size:1.3rem; transition:0.3s; margin-top:20px;" onclick="window.print()">🖨️ إصدار وتحميل السجل النهائي (PDF)</button>
+    </div>
+</div>
+<script>
+    let isPlaying = false;
+    function toggleMusic() {
+        const frame = document.getElementById('yt-audio');
+        if(!isPlaying) { frame.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*'); isPlaying = true; }
+    }
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('canvas-container').appendChild(renderer.domElement);
+    const particles = [];
+    for(let i=0; i<100; i++) {
+        const p = new THREE.Mesh(new THREE.IcosahedronGeometry(Math.random()*0.1, 0), new THREE.MeshBasicMaterial({ color: 0x7d8cc4, transparent: true, opacity: 0.3 }));
+        p.position.set((Math.random()-0.5)*15, (Math.random()-0.5)*15, (Math.random()-0.5)*15);
+        p.userData = { vy: 0.002 + Math.random()*0.005, pulse: Math.random()*Math.PI };
+        particles.push(p); scene.add(p);
+    }
+    camera.position.z = 6;
+    function animate() {
+        requestAnimationFrame(animate);
+        particles.forEach(p => { 
+            p.position.y += p.userData.vy; if(p.position.y > 6) p.position.y = -6;
+            p.userData.pulse += 0.02; p.scale.setScalar(1 + Math.sin(p.userData.pulse)*0.3);
+        });
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    const questions = [
+        { q: "أشعر بالاستنزاف العاطفي بسبب ضغوطات التفوق والتميز.", cat: "E" },
+        { q: "أصل لنهاية اليوم وأنا أشعر بنضوب كامل لطاقتي.", cat: "E" },
+        { q: "يراودني شعور بالثقل النفسي قبل بدء مهامي الدراسية صباحاً.", cat: "E" },
+        { q: "أمتلك القدرة على فهم انفعالات زملائي واحتوائها.", cat: "A" },
+        { q: "أشعر أحياناً بالرغبة في الانعزال أو التعامل ببرود مع المحيطين.", cat: "D" },
+        { q: "أشعر أن المهام المطلوبة أصبحت عبئاً يفوق قدرتي على الاحتمال.", cat: "E" },
+        { q: "أثق تماماً في قدرتي على حل المشكلات المعقدة.", cat: "A" },
+        { q: "أشعر بأن شعلة حماسي للإنجاز بدأت تخبو تدريجياً.", cat: "E" },
+        { q: "أشعر بالفخر تجاه المساهمات الإبداعية التي أقدمها.", cat: "A" },
+        { q: "أجد نفسي أقل صبراً وأكثر حدة في التعامل خلال فترات الضغط.", cat: "D" },
+        { q: "أخشى أن التركيز المفرط على الإنجاز سلب مني مهارة التعاطف.", cat: "D" },
+        { q: "تتجدد طاقتي بمجرد الانخراط في مشروع إبداعي جديد.", cat: "A" },
+        { q: "ينتابني شعور بعدم الرضا عن مستوى إنجازي الحالي.", cat: "E" },
+        { q: "أشعر أنني أضغط على أعصابي بشكل مستمر لمواكبة التوقعات.", cat: "E" },
+        { q: "أميل لتجاهل مشكلات الآخرين لكي أركز فقط على نجاتي الدراسية.", cat: "D" },
+        { q: "التواجد في بيئات مزدحمة بالتوقعات يسبب لي توتراً ملموساً.", cat: "E" },
+        { q: "أجيد خلق روح من الانسجام والتعاون في مجموعات العمل.", cat: "A" },
+        { q: "أشعر بنشوة حقيقية عند الوصول لحل مبتكر لمسألة صعبة.", cat: "A" },
+        { q: "أستطيع أن أرى ثمار جهدي وتفوقي تتحقق على أرض الواقع.", cat: "A" },
+        { q: "أشعر أحياناً أنني في صراع مستمر مع الوقت والطاقة.", cat: "E" },
+        { q: "أمتلك مهارات عالية في توجيه مشاعري نحو الإنجاز لا القلق.", cat: "A" },
+        { q: "أشعر أن البيئة المحيطة تحملني مسؤوليات تفوق طاقتي النفسية.", cat: "D" }
+    ];
+
+    let currentIdx = 0, scores = { E: 0, D: 0, A: 0 }, log = [];
+
+    function startQuiz() {
+        const name = document.getElementById('user-name').value;
+        if(!name) { alert("أهلاً بك أيها المبدع، فضلاً سجل اسمك لنبدأ."); return; }
+        toggleMusic(); document.getElementById('setup-section').style.display = 'none'; renderQuestion();
+    }
+
+    function renderQuestion() {
+        const container = document.getElementById('quiz-body');
+        if(currentIdx >= questions.length) { showReport(); return; }
+        const q = questions[currentIdx];
+        container.innerHTML = `<div style="text-align:center; animation:float-ui 0.6s ease;">
+            <p style="color:var(--accent); font-weight:bold; font-size:1.1rem;">المحطة ${currentIdx+1} / 22</p>
+            <h2 style="margin:30px 0; line-height:1.6; color:#1a1a1a;">${q.q}</h2>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                <button class="opt-btn" onclick="next(0,'أبداً')">أبداً</button>
+                <button class="opt-btn" onclick="next(1,'نادراً')">نادراً</button>
+                <button class="opt-btn" onclick="next(2,'أحياناً')">أحياناً</button>
+                <button class="opt-btn" onclick="next(3,'دائماً')">دائماً</button>
+            </div>
+        </div>`;
+    }
+
+    function next(v, t) { scores[questions[currentIdx].cat] += v; log.push({ q: questions[currentIdx].q, a: t }); currentIdx++; renderQuestion(); }
+
+    function showReport() {
+        document.getElementById('quiz-body').style.display = 'none';
+        document.getElementById('result-area').style.display = 'block';
+        
+        const name = document.getElementById('user-name').value;
+        const grade = document.getElementById('user-grade').value;
+        const today = new Date().toLocaleDateString('ar-JO');
+        document.getElementById('res-name-print').innerText = name;
+        document.getElementById('res-grade-print').innerText = grade;
+        document.getElementById('res-date-print').innerText = today;
+        
+        document.getElementById('e-score').innerText = scores.E;
+        document.getElementById('d-score').innerText = scores.D;
+        document.getElementById('a-score').innerText = scores.A;
+        
+        let rows = "";
+        log.forEach((item, idx) => { rows += `<tr><td>${idx+1}</td><td>${item.q}</td><td>${item.a}</td></tr>`; });
+        document.getElementById('qa-log-body').innerHTML = rows;
+
+        let analysis = `<strong>التحليل النوعي المتقدم (رؤية الأخصائية صفاء المصري):</strong><br>`;
+        if(scores.E > 18) analysis += `• <b>بُعد الإجهاد:</b> تظهر الاستجابات حالة من "النزف الطاقي" الانفعالي، مما يتطلب تدخلاً لإعادة جدولة الأولويات.<br>`;
+        if(scores.D > 8) analysis += `• <b>بُعد الانفصال:</b> هناك ميل للانسحاب كآلية وقائية، مما يستدعي تعزيز الانتماء العاطفي للمهام الإبداعية.<br>`;
+        if(scores.A < 16) analysis += `• <b>بُعد الكفاءة:</b> يواجه المبدع تحدياً في استشعار قيمة إنجازه، مما يتطلب برامج تعزيز الصورة الذاتية.<br>`;
+        else if(scores.E <= 18 && scores.A >= 18) analysis += `• <b>مؤشر الاتزان:</b> يتمتع المبدع بـ "صلابة نفسية" متميزة تتيح له تحويل الضغوط إلى طاقة إنتاجية.<br>`;
+        
+        const statusText = (scores.E > 19) ? "مؤشر التوازن: بحاجة لمساندة وتفريغ انفعالي" : "مؤشر التوازن: استقرار وإبداع متوهج";
+        document.getElementById('score-status').innerText = statusText;
+        document.getElementById('deep-analysis').innerHTML = analysis;
+        document.getElementById('final-recommendation').innerHTML = `<strong>توصية قلبية:</strong> أيها المبدع الغالي، "وجد السكينة" من أدرك أن النفس أمانة. تميزك لا يعني احتراقك، بل يعني إشراقك بتوازن. نحن معك لنرسم معاً طريقاً يجمع بين القمة وسلام الروح.`;
+
+        fetch"{https://script.google.com/macros/s/AKfycbxCd_Q9kpd44HqWV0f6du9j7WeejcPJRSEJJXs_APmfJsoJvXYT8u0vKinRYpZTg8cf/exec"
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name: name,
+                grade: grade,
+                exhaustion: scores.E,
+                cynicism: scores.D,
+                efficacy: scores.A,
+                status: statusText
+            })
+        });
+    }
+</script>
+</body>
+</html>
